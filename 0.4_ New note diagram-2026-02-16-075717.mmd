@@ -1,0 +1,39 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    %% --- Loading existing notes ---
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: CSS file
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: JavaScript file
+    deactivate server
+
+    Note right of browser: Browser executes JS that fetches existing notes
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ...]
+    deactivate server
+    Note right of browser: Browser renders the notes on the page
+
+    %% --- Creating a new note ---
+    Note left of browser: User types a new note in the text field
+    browser->>browser: Browser prepares new note as JSON
+    Note right of browser: e.g., { "content": "Learn Mermaid diagrams", "date": "2026-02-16" }
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    Note right of server: Server receives new note JSON and saves it
+    server-->>browser: { "id": 124, "content": "Learn Mermaid diagrams", "date": "2026-02-16" }
+    deactivate server
+
+    Note right of browser: Browser adds the new note to the displayed list

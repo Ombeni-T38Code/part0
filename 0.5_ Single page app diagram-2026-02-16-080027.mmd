@@ -1,0 +1,56 @@
+%%{init: { "themeVariables": {
+     "edgeLabelBackground":"#E8EAF6",
+     "sequenceNumberColor":"#3949AB",
+     "actorBorder":"#2e7d32",
+     "actorBkg":"#a5d6a7",
+     "actorTextColor":"#1b5e20",
+     "actorFontSize":"16",
+     "noteBkgColor":"#f3e5f5",
+     "noteBorderColor":"#ce93d8",
+     "noteTextColor":"#6a1b9a",
+     "messageFontSize":"16",
+     "messageTextColor":"#4a148c"
+} } }%%
+sequenceDiagram
+    participant browser
+    participant server
+
+    rect rgba(165,214,167,0.15)
+    %% --- Initial page load ---
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server-->>browser: HTML document (SPA shell)
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: CSS file
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: JavaScript file
+    deactivate server
+    end
+
+    Note right of browser: Browser executes SPA JS and fetches existing notes dynamically
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ...]
+    deactivate server
+    Note right of browser: Browser renders the notes in the SPA view
+
+    rect rgba(206,147,216,0.18)
+    %% --- Creating a new note in SPA ---
+    Note left of browser: User types a new note in the SPA text field
+    browser->>browser: Prepare new note JSON
+    Note right of browser: e.g., { "content": "Learn SPA behavior", "date": "2026-02-16" }
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    Note right of server: Server saves the new note
+    server-->>browser: { "id": 125, "content": "Learn SPA behavior", "date": "2026-02-16" }
+    deactivate server
+
+    Note right of browser: Browser dynamically updates the SPA view to include the new note
+    end

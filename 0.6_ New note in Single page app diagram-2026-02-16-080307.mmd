@@ -1,0 +1,28 @@
+%%{init: { "themeVariables": {
+    "actorBorder": "#fb8c00",
+    "actorBkg": "#ffe0b2",
+    "actorTextColor": "#bf360c",
+    "actorFontSize": "18",
+    "messageTextColor": "#6a1b9a",
+    "messageFontSize": "16",
+    "noteBkgColor": "#fff9c4",
+    "noteBorderColor": "#fbc02d",
+    "noteTextColor": "#f57c00"
+}}}%%
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note left of browser: User types a new note in the SPA text field
+    browser->>browser: Prepare new note JSON
+    Note right of browser: e.g., { "content": "Learn SPA note creation", "date": "2026-02-16" }
+
+    rect rgba(255, 183, 77, 0.20)
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    Note right of server: Server receives JSON and saves the note
+    server-->>browser: { "id": 126, "content": "Learn SPA note creation", "date": "2026-02-16" }
+    deactivate server
+    end
+
+    Note right of browser: Browser dynamically updates the SPA view to include the new note
